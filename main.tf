@@ -3,15 +3,25 @@ terraform {
   required_version = ">= 1.5.0"
 }
 
-variable "nome" {
+variable "ambiente" {
   type    = string
-  default = "Jefferson"
+  default = "homologacao"
 }
 
-locals {
-  mensagem = "Ola, ${var.nome}! Terraform executado com sucesso."
+variable "tipo_instancia" {
+  type    = string
+  default = "t3.small"
 }
 
-output "resultado" {
-  value = local.mensagem
+resource "terraform_data" "servidor" {
+  input = {
+    nome     = "servidor-app-01"
+    ambiente = var.ambiente
+    tipo     = var.tipo_instancia
+    equipe   = "infraestrutura"
+  }
+}
+
+output "configuracao_servidor" {
+  value = terraform_data.servidor.output
 }
